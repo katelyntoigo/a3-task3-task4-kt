@@ -1,0 +1,58 @@
+---
+title: "a3_task3_katelyn_toigo"
+author: "Katelyn Toigo"
+date: "10/31/2020"
+output: html_document
+---
+
+```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(janitor)
+library(kableExtra)
+```
+
+## Summary
+
+I will be analyzing the urchins.csv data.  I will be using version control, project management, data wrangling, analysis, and visualization skills.
+
+## Read in the data
+
+Read in the urchins.csv file and also clean the names so that they are all in lowercase snakecase.
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+urchins <- read_csv(here("data", "urchins.csv")) %>% 
+  clean_names()
+```
+
+## Exploratory data visualization
+
+### Faceted histogram
+
+Comparing common_name vs. size
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data = urchins, aes(x = size)) +
+  geom_histogram() +
+  facet_wrap(~common_name) +
+  labs(x = "Size (cm)", y = "Count")
+```
+
+### Boxplot
+
+Common name vs. size
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data = urchins, aes(x = common_name, y = size)) +
+  geom_boxplot()+
+  labs(x = "Common Name", y = "Size (cm)")
+```
+
+## Descriptive Statistics Table
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+urchin_table <- urchins %>% 
+  group_by(common_name) %>% 
+  summarize(mean = mean(size), median = median(size), sd = sd(size), n = n())
+  kbl(urchin_table) %>% 
+  kable_styling()
+```
+
