@@ -11,6 +11,7 @@ library(tidyverse)
 library(here)
 library(janitor)
 library(kableExtra)
+library(lubridate)
 ```
 
 ## Summary
@@ -55,4 +56,51 @@ urchin_table <- urchins %>%
   kbl(urchin_table) %>% 
   kable_styling()
 ```
+Purple urchins appear to be, on average, smaller in size than the red urchin (purple urchins have a mean that is 2.306692 cms smaller and their mean is 41% lower).  Purple urchins also have a smaller standard deviation and spread than the red urchins.  Both species have a relatively normal distribution when looking at the histogram.
+
+
+## Explore purple urchin counts by site and year
+
+Basic data wrangling - filter for only purple urchins, create a new columns called Date, year, and site_full.
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+purple_urchins <- urchins %>% 
+  filter(common_name == "Purple Urchin") %>% 
+  mutate(Date = mdy(date)) %>% 
+  mutate(year = year(Date)) %>% 
+  mutate(site_full = case_when(
+    site == "NAPL" ~ "Naples Reef",
+    site == "AQUE" ~ "Arroyo Quemado Reef",
+    site == "CARP" ~ "Carpinteria Reef",
+    site == "MOHK" ~ "Mohawk Reef",
+    site == "IVEE" ~ "Isla Vista Reef"
+  ))
+```
+
+
+## Summary table containing total number of purple urchins by site and year
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+
+purple_table <- purple_urchins %>% 
+  group_by(site_full, year) %>% 
+  count(site_full, year)
+purple_table
+
+```
+
+## Exploratory graph of counts of purple urchins recorded at each site over time
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data = purple_urchins, aes(x = year, color = site_full)) +
+  geom_histogram(bins=25) +
+  facet_wrap(~site_full)
+```
+
+
+
+
+
+
+
+
 
