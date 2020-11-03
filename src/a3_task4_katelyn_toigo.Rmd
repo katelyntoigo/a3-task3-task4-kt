@@ -1,0 +1,94 @@
+---
+title: "a3_task4_katelyn_toigo"
+author: "Katelyn Toigo"
+date: "11/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(janitor)
+library(kableExtra)
+library(lubridate)
+```
+
+## Summary
+
+I will be analyzing the urchins.csv data.  I will be comparing the mean size of purple urchins in CONTROL (no giant kelp removal) or ANNUAL (annual kelp removal) sections of Naples Reef in January 2010.
+
+## Read in the data
+
+Read in the urchins.csv file and also clean the names so that they are all in lowercase_snakecase (to make working with the data easier).
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+urchins <- read_csv(here("data", "urchins.csv")) %>% 
+  clean_names()
+```
+
+
+## Wrangle the data
+
+Filter to include only Naples Reef for January 2010.  Convert Date with lubridate, use month() and year() to create new month and year columns.
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+purple_napl <- urchins %>% 
+  mutate(Date = mdy(date)) %>% 
+  mutate(year = year(Date)) %>% 
+  mutate(month = month(Date)) %>% 
+  filter(site == "NAPL", year == 2010, month == 1)
+```
+
+
+## Graphs for better understanding of data
+
+### Histogram assessing size distribution for each treatment
+
+Size vs. Annual/Control
+facet_wrap() for treatment because it then created two histograms - one for each type of treatment
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data = purple_napl, aes(x = size)) +
+  geom_histogram() +
+  facet_wrap(~treatment) +
+  labs(x = "Size (cm)", y = "Count")
+```
+
+### QQ Plot assessing size distribution for each treatment
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data = purple_napl, aes(sample = size)) +
+  geom_qq() +
+  facet_wrap(~treatment) +
+  labs(x = "Size (cm)", y = "Count")
+```
+
+Main takeaways:  The annual treatment appears to have more spread in sizes and a lower kurtosis than the control treatment size distribution, when looking at the histograms. When looking at the qq-plots, both treatments are fairly linear meaning they are both close to being normally distributed. It looks like the annual plot is slightly more linear - slightly closer to normal distribution than the control.
+
+
+
+## Table of descriptive statistics
+
+Mean, median, standard deviation, sample size
+kable_styling helps when formatting the knitted document.
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+purple_napl_table <- purple_napl %>% 
+  group_by(treatment) %>% 
+  summarize(mean = mean(size), median = median(size), sd = sd(size), n = n())
+  kbl(purple_napl_table) %>% 
+  kable_styling()
+```
+
+
+## Two sample t-test
+
+ This test is to compare means between the two groups (treatments).
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
