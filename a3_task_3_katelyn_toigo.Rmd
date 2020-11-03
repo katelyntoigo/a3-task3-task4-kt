@@ -16,11 +16,11 @@ library(lubridate)
 
 ## Summary
 
-I will be analyzing the urchins.csv data.  I will be using version control, project management, data wrangling, analysis, and visualization skills.
+I will be analyzing the urchins.csv data.  I will be using version control, project management, data wrangling, analysis, and visualization skills. I will analyze urchin size vs. species (histogram, boxplot, and exploratory table) and counts by site and year (summary table and exploratory graph (histogram)).
 
 ## Read in the data
 
-Read in the urchins.csv file and also clean the names so that they are all in lowercase snakecase.
+Read in the urchins.csv file and also clean the names so that they are all in lowercase_snakecase (to make working with the data easier).
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 urchins <- read_csv(here("data", "urchins.csv")) %>% 
   clean_names()
@@ -30,7 +30,11 @@ urchins <- read_csv(here("data", "urchins.csv")) %>%
 
 ### Faceted histogram
 
-Comparing common_name vs. size
+Comparing common_name vs. size.
+
+Facet_wrap causes there to be two separate histograms, one for each common name.
+
+labs() allows you to change the axis labels.
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 ggplot(data = urchins, aes(x = size)) +
   geom_histogram() +
@@ -61,7 +65,7 @@ Purple urchins appear to be, on average, smaller in size than the red urchin (pu
 
 ## Explore purple urchin counts by site and year
 
-Basic data wrangling - filter for only purple urchins, create a new columns called Date, year, and site_full.
+Basic data wrangling - filter for only purple urchins, create a new columns called Date, year, and site_full.  Mutate is used to create the new columns.  mdy is used becasue the original data has dates in month, day, year order.
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 purple_urchins <- urchins %>% 
   filter(common_name == "Purple Urchin") %>% 
@@ -79,6 +83,7 @@ purple_urchins <- urchins %>%
 
 ## Summary table containing total number of purple urchins by site and year
 
+Group_by() is used first and followed by count() which basically combines group_by, summarize, and n all together in one function.
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 
 purple_table <- purple_urchins %>% 
@@ -90,6 +95,7 @@ purple_table
 
 ## Exploratory graph of counts of purple urchins recorded at each site over time
 
+Using a histogram set to 25 bins because it allowed for nice viewing between the years.  Facet wrap is used to separate each location into its own histogram.
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 ggplot(data = purple_urchins, aes(x = year, color = site_full)) +
   geom_histogram(bins=25) +
