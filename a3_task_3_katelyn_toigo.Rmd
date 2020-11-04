@@ -60,7 +60,7 @@ urchin_table <- urchins %>%
   kbl(urchin_table) %>% 
   kable_styling()
 ```
-Purple urchins appear to be, on average, smaller in size than the red urchin (purple urchins have a mean that is 2.306692 cms smaller and their mean is 41% lower).  Purple urchins also have a smaller standard deviation and spread than the red urchins.  Both species have a relatively normal distribution when looking at the histogram.
+Purple urchins appear to be, on average, smaller in size than the red urchin (purple urchins have a mean that is 2.306692 cms smaller and their mean is 41% lower (this was calculated by finding the difference between the two means, dividing by their average and multiplying by 100)).  Purple urchins also have a smaller standard deviation and spread than the red urchins.  Both species have a relatively normal distribution when looking at the histogram.
 
 
 ## Explore purple urchin counts by site and year
