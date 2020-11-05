@@ -1,0 +1,108 @@
+---
+title: "a3_task3_katelyn_toigo"
+author: "Katelyn Toigo"
+date: "10/31/2020"
+output: html_document
+---
+
+```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(janitor)
+library(kableExtra)
+library(lubridate)
+```
+
+## Summary
+
+I will be analyzing the urchins.csv data.  I will be using version control, project management, data wrangling, analysis, and visualization skills. I will analyze urchin size vs. species (histogram, boxplot, and exploratory table) and counts by site and year (summary table and exploratory graph (histogram)).
+
+## Read in the data
+
+Read in the urchins.csv file and also clean the names so that they are all in lowercase_snakecase (to make working with the data easier).
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+urchins <- read_csv(here("data", "urchins.csv")) %>% 
+  clean_names()
+```
+
+## Exploratory data visualization
+
+### Faceted histogram
+
+Comparing common_name vs. size.
+
+Facet_wrap causes there to be two separate histograms, one for each common name.
+
+labs() allows you to change the axis labels.
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data = urchins, aes(x = size)) +
+  geom_histogram() +
+  facet_wrap(~common_name) +
+  labs(x = "Size (cm)", y = "Count")
+```
+
+### Boxplot
+
+Common name vs. size
+
+labs() to label the axis
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data = urchins, aes(x = common_name, y = size)) +
+  geom_boxplot()+
+  labs(x = "Common Name", y = "Size (cm)")
+```
+
+## Descriptive Statistics Table
+
+kable_styling() to make the graph format better in the knitted document
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+urchin_table <- urchins %>% 
+  group_by(common_name) %>% 
+  summarize(mean = mean(size), median = median(size), sd = sd(size), n = n())
+  kbl(urchin_table) %>% 
+  kable_styling()
+```
+Purple urchins appear to be, on average, smaller in size than the red urchin (purple urchins have a mean that is 2.306692 cms smaller and their mean is 41% lower (this was calculated by finding the difference between the two means, dividing by their average and multiplying by 100)).  Purple urchins also have a smaller standard deviation and spread than the red urchins.  Both species have a relatively normal distribution when looking at the histogram.
+
+
+## Explore purple urchin counts by site and year
+
+Basic data wrangling - filter for only purple urchins, create a new columns called Date, year, and site_full.  Mutate is used to create the new columns.  mdy is used becasue the original data has dates in month, day, year order.
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+purple_urchins <- urchins %>% 
+  filter(common_name == "Purple Urchin") %>% 
+  mutate(Date = mdy(date)) %>% 
+  mutate(year = year(Date)) %>% 
+  mutate(site_full = case_when(
+    site == "NAPL" ~ "Naples Reef",
+    site == "AQUE" ~ "Arroyo Quemado Reef",
+    site == "CARP" ~ "Carpinteria Reef",
+    site == "MOHK" ~ "Mohawk Reef",
+    site == "IVEE" ~ "Isla Vista Reef"
+  ))
+```
+
+
+## Summary table containing total number of purple urchins by site and year
+
+Group_by() is used first and followed by count() which basically combines group_by, summarize, and n all together in one function.
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+
+purple_table <- purple_urchins %>% 
+  group_by(site_full, year) %>% 
+  count(site_full, year)
+purple_table
+
+```
+
+## Exploratory graph of counts of purple urchins recorded at each site over time
+
+Using a histogram set to 25 bins because it allowed for nice viewing between the years.  Facet wrap is used to separate each location into its own histogram.
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data = purple_urchins, aes(x = year, color = site_full)) +
+  geom_histogram(bins=25) +
+  facet_wrap(~site_full)
+```
+
