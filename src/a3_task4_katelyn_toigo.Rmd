@@ -16,7 +16,7 @@ library(lubridate)
 
 ## Summary
 
-I will be analyzing the urchins.csv data.  I will be comparing the mean size of purple urchins in CONTROL (no giant kelp removal) or ANNUAL (annual kelp removal) sections of Naples Reef in January 2010.
+I will be analyzing the urchins.csv data.  I will be comparing the mean size of purple urchins in CONTROL (no giant kelp removal) or ANNUAL (annual kelp removal) sections of Naples Reef in January 2010. I will be creating histograms, qq plots, summary tables, and performing a two sample t-test.
 
 ## Read in the data
 
