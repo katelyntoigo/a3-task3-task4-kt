@@ -45,7 +45,8 @@ purple_napl <- urchins %>%
 ### Histogram assessing size distribution for each treatment
 
 Size vs. Annual/Control
-facet_wrap() for treatment because it then created two histograms - one for each type of treatment
+
+facet_wrap() for treatment because it creates two histograms - one for each type of treatment.
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 ggplot(data = purple_napl, aes(x = size)) +
   geom_histogram() +
@@ -62,13 +63,14 @@ ggplot(data = purple_napl, aes(sample = size)) +
   labs(x = "Size (cm)", y = "Count")
 ```
 
-Main takeaways:  The annual treatment appears to have more spread in sizes and a lower kurtosis than the control treatment size distribution, when looking at the histograms. When looking at the qq-plots, both treatments are fairly linear meaning they are both close to being normally distributed. It looks like the annual plot is slightly more linear - slightly closer to normal distribution than the control.
+Main takeaways:  The annual treatment appears to have more spread in sizes and have a lower kurtosis than the control treatment size distribution, when looking at the histograms. When looking at the qq-plots, both treatments are fairly linear meaning they are both close to being normally distributed. It looks like the annual plot is slightly more linear - slightly closer to normal distribution than the control.
 
 
 
 ## Table of descriptive statistics
 
-Mean, median, standard deviation, sample size
+Table will include mean, median, standard deviation, and sample size.
+
 kable_styling helps when formatting the knitted document.
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 purple_napl_table <- purple_napl %>% 
@@ -81,14 +83,28 @@ purple_napl_table <- purple_napl %>%
 
 ## Two sample t-test
 
- This test is to compare means between the two groups (treatments).
+This test is to compare means between the two groups (treatments).
+First, need to split the purple_napl data into two groups (annual and control).  Then, the pull function will be used to select the sample vectors which will be used in the two sample t-test.
+ 
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+annual_sample <- purple_napl %>% 
+  filter(treatment == "ANNUAL") %>% 
+  pull(size)
+
+control_sample <- purple_napl %>% 
+  filter(treatment == "CONTROL") %>% 
+  pull(size)
+```
  
  
+Once vectors are selected, it is time to do the test.  Both vector names are listed after the function (t.test).
  
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+t.test(annual_sample, control_sample)
+```
  
- 
- 
- 
+There is a high chance fo randomly selecting two samples from populations with the same mean that are this different by chance. The mean of the annual treatment is 5.314516cm and the mean of the control sample is 5.093750cm which means the difference between the means is 0.220766 cm.  This results in a percent difference of 4.24%.  There is a high probability that these two samples could have been drawn from a population of the same mean.
+This test resulted in a high p-value of 0.3063 - a higher p-value tends to mean that sample means are closer which means we have a high probability of the two sample means being at least this different.
  
  
  

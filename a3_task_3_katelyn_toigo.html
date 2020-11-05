@@ -610,6 +610,7 @@ library(lubridate)</code></pre>
 <div id="boxplot" class="section level3">
 <h3>Boxplot</h3>
 <p>Common name vs. size</p>
+<p>labs() to label the axis</p>
 <pre class="r"><code>ggplot(data = urchins, aes(x = common_name, y = size)) +
   geom_boxplot()+
   labs(x = &quot;Common Name&quot;, y = &quot;Size (cm)&quot;)</code></pre>
@@ -618,6 +619,7 @@ library(lubridate)</code></pre>
 </div>
 <div id="descriptive-statistics-table" class="section level2">
 <h2>Descriptive Statistics Table</h2>
+<p>kable_styling() to make the graph format better in the knitted document</p>
 <pre class="r"><code>urchin_table &lt;- urchins %&gt;% 
   group_by(common_name) %&gt;% 
   summarize(mean = mean(size), median = median(size), sd = sd(size), n = n())
@@ -680,7 +682,7 @@ Red Urchin
 </tr>
 </tbody>
 </table>
-<p>Purple urchins appear to be, on average, smaller in size than the red urchin (purple urchins have a mean that is 2.306692 cms smaller and their mean is 41% lower). Purple urchins also have a smaller standard deviation and spread than the red urchins. Both species have a relatively normal distribution when looking at the histogram.</p>
+<p>Purple urchins appear to be, on average, smaller in size than the red urchin (purple urchins have a mean that is 2.306692 cms smaller and their mean is 41% lower (this was calculated by finding the difference between the two means, dividing by their average and multiplying by 100)). Purple urchins also have a smaller standard deviation and spread than the red urchins. Both species have a relatively normal distribution when looking at the histogram.</p>
 </div>
 <div id="explore-purple-urchin-counts-by-site-and-year" class="section level2">
 <h2>Explore purple urchin counts by site and year</h2>

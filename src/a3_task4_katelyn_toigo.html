@@ -685,7 +685,28 @@ CONTROL
 </div>
 <div id="two-sample-t-test" class="section level2">
 <h2>Two sample t-test</h2>
-<p>This test is to compare means between the two groups (treatments).</p>
+<p>This test is to compare means between the two groups (treatments). First, need to split the purple_napl data into two groups (annual and control). Then, the pull function will be used to select the sample vectors which will be used in the two sample t-test.</p>
+<pre class="r"><code>annual_sample &lt;- purple_napl %&gt;% 
+  filter(treatment == &quot;ANNUAL&quot;) %&gt;% 
+  pull(size)
+
+control_sample &lt;- purple_napl %&gt;% 
+  filter(treatment == &quot;CONTROL&quot;) %&gt;% 
+  pull(size)</code></pre>
+<p>Once vectors are selected, it is time to do the test. Both vector names are listed after the function (t.test).</p>
+<pre class="r"><code>t.test(annual_sample, control_sample)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  annual_sample and control_sample
+## t = 1.0251, df = 241.29, p-value = 0.3063
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.2034569  0.6449892
+## sample estimates:
+## mean of x mean of y 
+##  5.314516  5.093750</code></pre>
+<p>The mean of the annual treatment is 5.314516cm and the mean of the control sample is 5.093750cm which means the difference between the means is 0.220766 cm. This results in a percent difference of 4.24%. There is a high probability that these two samples could have been drawn from a population of the same mean. This test resulted in a high p-value of 0.3063 - a higher p-value tends to mean that sample means are closer which means we have a high probability of the two sample means being at least this different.</p>
 </div>
 
 
